@@ -7,4 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('notes', NoteController::class);
+Route::middleware('auth')->group(function () {
+    Route::get('/notes/search', [NoteController::class, 'search']);
+    Route::resource('notes', NoteController::class);
+});
