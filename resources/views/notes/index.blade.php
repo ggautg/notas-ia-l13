@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html x-data="{ dark: localStorage.getItem('dark') === 'true' }" :class="{ 'dark': dark }">
 
 <head>
     <title>Mis Notas</title>
-    @vite('resources/css/app.css')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans">
     <div class="max-w-2xl mx-auto mt-10 px-4">
 
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">Mis Notas</h1>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Mis Notas</h1>
 
             <form action="/logout" method="POST">
                 @csrf
@@ -18,6 +18,11 @@
                     Cerrar sesión ({{ auth()->user()->name }})
                 </button>
             </form>
+            <button @click="dark = !dark; localStorage.setItem('dark', dark)"
+                class="text-sm text-gray-500 dark:text-gray-300 mr-3">
+                <span x-show="!dark">🌙 Oscuro</span>
+                <span x-show="dark">☀️ Claro</span>
+            </button>
         </div>
 
         @if (session('success'))
@@ -42,14 +47,14 @@
 
         <ul class="space-y-4">
             @foreach ($notes as $note)
-                <li class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-                    <strong class="text-lg text-gray-900">{{ $note->title }}</strong>
+                <li class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm">
+                    <strong class="text-lg text-gray-900 dark:text-white">{{ $note->title }}</strong>
 
                     @if ($note->summary)
                         <p class="text-indigo-500 text-sm italic mt-1">{{ $note->summary }}</p>
                     @endif
 
-                    <p class="text-gray-600 mt-1">{{ $note->content }}</p>
+                    <p class="text-gray-600 dark:text-gray-300 mt-1">{{ $note->content }}</p>
 
                     @if (isset($note->similarity))
                         <small class="text-gray-400">Coincidencia: {{ round($note->similarity * 100) }}%</small><br>
