@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Ai\Agents\Summarizer;
 use App\Models\Note;
+use App\Services\NoteAiService;
 use Illuminate\Http\Request;
 use Laravel\Ai\Embeddings;
 
@@ -30,22 +30,15 @@ class NoteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, NoteAiService $ai)
     {
         $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
         ]);
 
-        $embedding = Embeddings::for([$validated['title'].' '.$validated['content']])
-            ->generate();
-
-        $validated['embedding'] = $embedding->embeddings[0];
-
-        $summary = Summarizer::make()->prompt('Resumí esta nota: '.$validated['title'].' - '.$validated['content']);
-
-        $validated['summary'] = (string) $summary;
-
+        $validated['embedding'] = $ai->generateEmbedding($validated['title'], $validated['content']);
+        $validated['summary'] = $ai->generateSummary($validated['title'], $validated['content']);
         $validated['user_id'] = auth()->id();
 
         Note::create($validated);
@@ -74,24 +67,17 @@ class NoteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id, NoteAiService $ai)
     {
         $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
         ]);
 
-        $embedding = Embeddings::for([$validated['title'].' '.$validated['content']])
-            ->generate();
-
-        $validated['embedding'] = $embedding->embeddings[0];
-
-        $summary = Summarizer::make()->prompt('Resumí esta nota: '.$validated['title'].' - '.$validated['content']);
-
-        $validated['summary'] = (string) $summary;
+        $validated['embedding'] = $ai->generateEmbedding($validated['title'], $validated['content']);
+        $validated['summary'] = $ai->generateSummary($validated['title'], $validated['content']);
 
         $note = Note::where('user_id', auth()->id())->findOrFail($id);
-
         $note->update($validated);
 
         return redirect('/notes')->with('success', 'Nota actualizada correctamente');
