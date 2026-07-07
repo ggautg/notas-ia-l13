@@ -109,6 +109,11 @@ class NoteController extends Controller
 
         $note = Note::where('user_id', auth()->id())->findOrFail($id);
 
+        $note->versions()->create([
+            'title' => $note->title,
+            'content' => $note->content,
+        ]);
+
         if ($request->hasFile('image')) {
             if ($note->image) {
                 Storage::disk('public')->delete($note->image);
@@ -185,6 +190,13 @@ class NoteController extends Controller
 
         return view('notes.index', ['notes' => $notes]);
     }
+
+    public function history(string $id)
+{
+    $note = Note::where('user_id', auth()->id())->findOrFail($id);
+
+    return view('notes.history', ['note' => $note]);
+}
 
     private function cosineSimilarity(array $a, array $b): float
     {
