@@ -9,14 +9,20 @@ class Note extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'content', 'embedding', 'summary', 'user_id'];
+    protected $fillable = ['title', 'content', 'embedding',
+     'summary', 'user_id', 'image', 'share_token'];
 
     protected $casts = [
         'embedding' => 'array',
     ];
 
     public function user()
-{
-    return $this->belongsTo(User::class);
-}
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
 }

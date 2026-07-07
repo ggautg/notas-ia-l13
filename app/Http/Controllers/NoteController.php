@@ -3,18 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Models\Tag;
 use App\Services\NoteAiService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Laravel\Ai\Embeddings;
+use Storage;
+use Str;
 
 class NoteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $notes = Note::where('user_id', auth()->id())->latest()->paginate(5);
+        $query = Note::where('user_id', auth()->id());
+
+        if ($request->filled('tag')) {
+            $query->whereHas('tags', function ($q) use ($request) {
+                $q->where('name', $request->input('tag'));
+            });
+        }
+
+        $notes = $query->latest()->paginate(5);
 
         return view('notes.index', ['notes' => $notes]);
     }
@@ -35,13 +47,26 @@ class NoteController extends Controller
         $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
+            'tags' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
         ]);
 
         $validated['embedding'] = $ai->generateEmbedding($validated['title'], $validated['content']);
         $validated['summary'] = $ai->generateSummary($validated['title'], $validated['content']);
         $validated['user_id'] = auth()->id();
 
-        Note::create($validated);
+        $tagsInput = $validated['tags'] ?? '';
+        unset($validated['tags']);
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('notes', 'public');
+        } else {
+            unset($validated['image']);
+        }
+
+        $note = Note::create($validated);
+
+        $this->syncTags($note, $tagsInput);
 
         return redirect('/notes')->with('success', 'Nota creada correctamente');
     }
@@ -72,13 +97,31 @@ class NoteController extends Controller
         $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
+            'tags' => 'nullable||string',
+            'image' => 'nullable|image|max:2048',
         ]);
 
         $validated['embedding'] = $ai->generateEmbedding($validated['title'], $validated['content']);
         $validated['summary'] = $ai->generateSummary($validated['title'], $validated['content']);
 
+        $tagsInput = $validated['tags'] ?? '';
+        unset($validated['tags']);
+
         $note = Note::where('user_id', auth()->id())->findOrFail($id);
+
+        if ($request->hasFile('image')) {
+            if ($note->image) {
+                Storage::disk('public')->delete($note->image);
+            }
+
+            $validated['image'] = $request->file('image')->store('notes', 'public');
+        } else {
+            unset($validated['image']);
+        }
+
         $note->update($validated);
+
+        $this->syncTags($note, $tagsInput);
 
         return redirect('/notes')->with('success', 'Nota actualizada correctamente');
     }
@@ -93,6 +136,33 @@ class NoteController extends Controller
         $note->delete();
 
         return redirect('/notes')->with('success', 'Nota borrada correctamente');
+    }
+
+    public function share(string $id)
+    {
+        $note = Note::where('user_id', auth()->id())->findOrFail($id);
+
+        if (! $note->share_token) {
+            $note->update(['share_token' => Str::random(32)]);
+        }
+
+        return redirect('/notes')->with('success', 'Link generado correctamente');
+    }
+
+    public function shared(string $token)
+    {
+        $note = Note::where('share_token', $token)->firstOrFail();
+
+        return view('notes.shared', ['note' => $note]);
+    }
+
+    public function pdf(string $id)
+    {
+        $note = Note::where('user_id', auth()->id())->findOrFail($id);
+
+        $pdf = Pdf::loadView('notes.pdf', ['note' => $note]);
+
+        return $pdf->download('nota-'.$note->id.'.pdf');
     }
 
     public function search(Request $request)
@@ -129,5 +199,18 @@ class NoteController extends Controller
         }
 
         return $dotProduct / (sqrt($normA) * sqrt($normB));
+    }
+
+    private function syncTags(Note $note, string $tagsInput): void
+    {
+        $tagNames = collect(explode(',', $tagsInput))
+            ->map(fn ($name) => trim($name))
+            ->filter();
+
+        $tagIds = $tagNames->map(function ($name) {
+            return Tag::firstOrCreate(['name' => $name])->id;
+        });
+
+        $note->tags()->sync($tagIds);
     }
 }

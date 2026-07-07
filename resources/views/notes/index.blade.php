@@ -45,16 +45,46 @@
             </button>
         </form>
 
+        @if (request('query') || request('tag'))
+            <div class="flex items-center gap-2 mb-4 text-sm">
+                @if (request('query'))
+                    <span class="text-gray-500 dark:text-gray-400">Buscando: "{{ request('query') }}"</span>
+                @endif
+
+                @if (request('tag'))
+                    <span class="text-gray-500 dark:text-gray-400">Etiqueta: "{{ request('tag') }}"</span>
+                @endif
+
+                <a href="/notes" class="text-indigo-600 dark:text-indigo-400 hover:underline">✕ Ver todas</a>
+            </div>
+        @endif
+
         <ul class="space-y-4">
             @foreach ($notes as $note)
                 <li class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm">
                     <strong class="text-lg text-gray-900 dark:text-white">{{ $note->title }}</strong>
+
+                    @if ($note->image)
+                        <img src="{{ Storage::url($note->image) }}" alt="{{ $note->title }}"
+                            class="w-full max-w-xs rounded-lg mt-2">
+                    @endif
 
                     @if ($note->summary)
                         <p class="text-indigo-500 text-sm italic mt-1">{{ $note->summary }}</p>
                     @endif
 
                     <p class="text-gray-600 dark:text-gray-300 mt-1">{{ $note->content }}</p>
+
+                    @if ($note->tags->isNotEmpty())
+                        <div class="flex gap-2 mt-2">
+                            @foreach ($note->tags as $tag)
+                                <a href="/notes?tag={{ $tag->name }}"
+                                    class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200 text-xs px-2 py-1 rounded-full hover:bg-indigo-200 dark:hover:bg-indigo-800">
+                                    {{ $tag->name }}
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
 
                     @if (isset($note->similarity))
                         <small class="text-gray-400">Coincidencia: {{ round($note->similarity * 100) }}%</small><br>
@@ -69,6 +99,26 @@
                             @method('DELETE')
                             <button type="submit" class="text-red-600 text-sm font-medium hover:underline">Borrar</button>
                         </form>
+
+
+                        <form action="/notes/{{ $note->id }}/share" method="POST">
+                            @csrf
+                            <button type="submit"
+                                class="text-gray-500 dark:text-gray-400 text-sm font-medium hover:underline">
+                                🔗 Compartir
+                            </button>
+                        </form>
+
+                        @if ($note->share_token)
+                            <span class="text-xs text-gray-400">
+                                Link: {{ url('/shared/' . $note->share_token) }}
+                            </span>
+                        @endif
+
+                        <a href="/notes/{{ $note->id }}/pdf"
+                            class="text-gray-500 dark:text-gray-400 text-sm font-medium hover:underline">
+                            📄 PDF
+                        </a>
                     </div>
                 </li>
             @endforeach
