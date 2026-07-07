@@ -113,16 +113,21 @@
                             class="text-gray-500 dark:text-gray-400 text-sm font-medium hover:underline">
                             📄 PDF
                         </a>
-                    </div>
+
+                        <a href="/notes/{{ $note->id }}/history"
+                            class="text-gray-500 dark:text-gray-400 text-sm font-medium hover:underline">
+                            🕒 Historial
+                        </a>
+                                </div>
                 </li>
             @endforeach
-        </ul>
+            </ul>
 
-        @if ($notes instanceof \Illuminate\Pagination\LengthAwarePaginator)
-            <div class="mt-6">
-                {{ $notes->links() }}
-            </div>
-        @endif
+            @if ($notes instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                <div class="mt-6">
+                           {{ $notes->links() }}
+                </div>
+            @endif
 
     </div>
     @livewireScripts

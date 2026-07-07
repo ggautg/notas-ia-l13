@@ -192,11 +192,31 @@ class NoteController extends Controller
     }
 
     public function history(string $id)
-{
-    $note = Note::where('user_id', auth()->id())->findOrFail($id);
+    {
+        $note = Note::where('user_id', auth()->id())->findOrFail($id);
 
-    return view('notes.history', ['note' => $note]);
-}
+        return view('notes.history', ['note' => $note]);
+    }
+
+    public function restore(string $id, string $versionId, NoteAiService $ai)
+    {
+        $note = Note::where('user_id', auth()->id())->findOrFail($id);
+        $version = $note->versions()->findOrFail($versionId);
+
+        $note->versions()->create([
+            'title' => $note->title,
+            'content' => $note->content,
+        ]);
+
+        $note->update([
+            'title' => $version->title,
+            'content' => $version->content,
+            'embedding' => $ai->generateEmbedding($version->title, $version->content),
+            'summary' => $ai->generateSummary($version->title, $version->content),
+        ]);
+
+        return redirect('/notes')->with('success', 'Nota restaurada correctamente');
+    }
 
     private function cosineSimilarity(array $a, array $b): float
     {
