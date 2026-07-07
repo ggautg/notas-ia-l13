@@ -4,6 +4,7 @@
 <head>
     <title>Mis Notas</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans">
@@ -36,14 +37,7 @@
             + Nueva nota
         </a>
 
-        <form action="/notes/search" method="GET" class="flex gap-2 mb-6">
-            <input type="text" name="query" placeholder="Buscar por significado..." value="{{ request('query') }}"
-                class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-            <button type="submit"
-                class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-900">
-                Buscar
-            </button>
-        </form>
+        <livewire:note-search />
 
         @if (request('query') || request('tag'))
             <div class="flex items-center gap-2 mb-4 text-sm">
@@ -131,6 +125,7 @@
         @endif
 
     </div>
+    @livewireScripts
 </body>
 
 </html>
