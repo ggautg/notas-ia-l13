@@ -37,7 +37,15 @@
             + Nueva nota
         </a>
 
-        <livewire:note-search />
+        <form action="/notes/search" method="GET" class="flex gap-2 mb-6">
+            <input type="text" name="query" placeholder="Buscar por título o contenido..."
+                value="{{ request('query') }}"
+                class="flex-1 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg px-3 py-2 text-sm">
+            <button type="submit"
+                class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-900">
+                Buscar
+            </button>
+        </form>
 
         @if (request('query') || request('tag'))
             <div class="flex items-center gap-2 mb-4 text-sm">
@@ -118,16 +126,16 @@
                             class="text-gray-500 dark:text-gray-400 text-sm font-medium hover:underline">
                             🕒 Historial
                         </a>
-                                </div>
+                    </div>
                 </li>
             @endforeach
-            </ul>
+        </ul>
 
-            @if ($notes instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                <div class="mt-6">
-                           {{ $notes->links() }}
-                </div>
-            @endif
+        @if ($notes instanceof \Illuminate\Pagination\LengthAwarePaginator)
+            <div class="mt-6">
+                {{ $notes->links() }}
+            </div>
+        @endif
 
     </div>
     @livewireScripts

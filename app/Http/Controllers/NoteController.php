@@ -7,7 +7,6 @@ use App\Models\Tag;
 use App\Services\NoteAiService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Laravel\Ai\Embeddings;
 use Storage;
 use Str;
 
@@ -178,15 +177,13 @@ class NoteController extends Controller
             return redirect('/notes');
         }
 
-        $queryEmbedding = Embeddings::for([$query])->generate()->embeddings[0];
-
-        $notes = Note::whereNotNull('embedding')->get();
-
-        $notes = $notes->map(function ($note) use ($queryEmbedding) {
-            $note->similarity = $this->cosineSimilarity($note->embedding, $queryEmbedding);
-
-            return $note;
-        })->sortByDesc('similarity')->values();
+        $notes = Note::where('user_id', auth()->id())
+            ->where(function ($q) use ($query) {
+                $q->where('title', 'like', '%'.$query.'%')
+                    ->orWhere('content', 'like', '%'.$query.'%');
+            })
+            ->latest()
+            ->get();
 
         return view('notes.index', ['notes' => $notes]);
     }
