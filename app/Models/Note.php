@@ -9,12 +9,7 @@ class Note extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'content', 'embedding',
-        'summary', 'user_id', 'image', 'share_token'];
-
-    protected $casts = [
-        'embedding' => 'array',
-    ];
+    protected $fillable = ['title', 'content', 'user_id', 'image', 'share_token', 'emoji', 'pinned'];
 
     public function user()
     {
