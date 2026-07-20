@@ -32,9 +32,20 @@ class NoteController extends Controller
             default => $query->latest(),
         };
 
-        $notes = $query->paginate(5)->withQueryString();
+       $notes = $query->paginate(5)->withQueryString();
 
-        return view('notes.index', ['notes' => $notes]);
+$totalNotes = Note::where('user_id', auth()->id())->count();
+$topTags = Tag::whereHas('notes', function ($q) {
+    $q->where('user_id', auth()->id());
+})
+    ->withCount(['notes' => function ($q) {
+        $q->where('user_id', auth()->id());
+    }])
+    ->orderByDesc('notes_count')
+    ->take(3)
+    ->get();
+
+return view('notes.index', ['notes' => $notes, 'totalNotes' => $totalNotes, 'topTags' => $topTags]);
     }
 
     /**
@@ -236,13 +247,13 @@ class NoteController extends Controller
         $note->tags()->sync($tagIds);
     }
 
-   public function pin(string $id)
-{
-    $note = Note::where('user_id', auth()->id())->findOrFail($id);
-    $note->update(['pinned' => ! $note->pinned]);
+    public function pin(string $id)
+    {
+        $note = Note::where('user_id', auth()->id())->findOrFail($id);
+        $note->update(['pinned' => ! $note->pinned]);
 
-    $message = $note->pinned ? 'Nota fijada' : 'Nota desfijada';
+        $message = $note->pinned ? 'Nota fijada' : 'Nota desfijada';
 
-    return redirect()->back()->with('success', $message);
-}
+        return redirect()->back()->with('success', $message);
+    }
 }

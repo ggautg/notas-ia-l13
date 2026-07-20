@@ -41,6 +41,20 @@
             + Nueva nota
         </a>
 
+        <div class="flex items-center gap-4 text-xs text-gray-500 mb-6">
+            <span>{{ $totalNotes }} {{ Str::plural('nota', $totalNotes) }}</span>
+
+            @if ($topTags->isNotEmpty())
+                <span>·</span>
+                <span>
+                    Más usadas:
+                    @foreach ($topTags as $tag)
+                        <span class="text-indigo-400">{{ $tag->name }}</span>{{ !$loop->last ? ', ' : '' }}
+                    @endforeach
+                </span>
+            @endif
+        </div>
+
         <form action="/notes/search" method="GET" class="flex gap-2 mb-6">
             <input type="text" name="query" placeholder="Buscar por título o contenido..."
                 value="{{ request('query') }}"
