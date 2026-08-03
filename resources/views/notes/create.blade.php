@@ -71,11 +71,18 @@
                 <p class="text-xs text-gray-600 mt-1.5">Separá las etiquetas con comas</p>
             </div>
 
-            <div class="mb-6">
+            <div class="mb-6" x-data="{ preview: null }">
                 <label for="image"
                     class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">Imagen
                     (opcional)</label>
-                <input type="file" name="image" id="image" accept="image/*" class="w-full text-sm text-gray-400">
+
+                <input type="file" name="image" id="image" accept="image/*"
+                    @change="preview = $event.target.files.length ? URL.createObjectURL($event.target.files[0]) : null"
+                    class="w-full text-sm text-gray-400">
+
+                <template x-if="preview">
+                    <img :src="preview" class="w-32 rounded-lg mt-3">
+                </template>
             </div>
 
             <button type="submit" :disabled="loading" x-text="loading ? 'Guardando...' : 'Guardar'"
