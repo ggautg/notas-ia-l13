@@ -1,64 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+
 <head>
     <title>Crear cuenta</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💿</text></svg>">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-950 text-white font-sans min-h-screen relative overflow-hidden">
 
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-600/30 blur-[120px] rounded-full pointer-events-none"></div>
-    <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-600/20 blur-[100px] rounded-full pointer-events-none"></div>
+<body
+    class="bg-gradient-to-br from-cyan-100 via-fuchsia-50 to-lime-100 text-gray-900 font-sans min-h-screen relative overflow-hidden">
+
+    <div
+        class="absolute top-10 left-10 w-40 h-40 bg-gradient-to-br from-fuchsia-400 to-purple-500 rounded-full blur-2xl opacity-60">
+    </div>
+    <div
+        class="absolute bottom-10 right-10 w-56 h-56 bg-gradient-to-br from-cyan-300 to-blue-400 rounded-full blur-2xl opacity-60">
+    </div>
 
     <div class="relative max-w-md mx-auto px-6 pt-24">
 
         <div class="text-center mb-8">
-            <a href="/" class="text-2xl font-extrabold tracking-tight bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent">
+            <a href="/" class="text-3xl font-black tracking-tight"
+                style="background: linear-gradient(90deg, #ff00cc, #00e5ff, #ccff00); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
                 NOTAS
             </a>
         </div>
 
-        <h1 class="text-2xl font-bold text-center mb-6">Crear cuenta</h1>
+        <h1 class="text-2xl font-black text-center mb-6">Crear cuenta</h1>
 
         @if ($errors->any())
-            <div class="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-lg mb-4 text-sm">
+            <div
+                class="bg-red-100 border-4 border-black text-red-700 px-4 py-3 rounded-2xl mb-4 text-sm font-medium shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 @foreach ($errors->all() as $error)
                     <p>{{ $error }}</p>
                 @endforeach
             </div>
         @endif
 
-        <form action="/register" method="POST" x-data="{ loading: false }" @submit="loading = true" class="bg-white/5 border border-white/10 rounded-xl p-6">
-    @csrf
+        <form action="/register" method="POST" x-data="{ loading: false }" @submit="loading = true"
+            class="bg-white border-4 border-black rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            @csrf
 
             <div class="mb-4">
-                <label for="name" class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">Nombre</label>
-                <input type="text" name="name" id="name" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition">
+                <label for="name"
+                    class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Nombre</label>
+                <input type="text" name="name" id="name"
+                    class="w-full bg-cyan-50 border-2 border-black rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:bg-white transition">
             </div>
 
             <div class="mb-4">
-                <label for="email" class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">Email</label>
-                <input type="email" name="email" id="email" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition">
+                <label for="email"
+                    class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Email</label>
+                <input type="email" name="email" id="email"
+                    class="w-full bg-cyan-50 border-2 border-black rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:bg-white transition">
             </div>
 
             <div class="mb-4">
-                <label for="password" class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">Contraseña</label>
-                <input type="password" name="password" id="password" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition">
+                <label for="password"
+                    class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Contraseña</label>
+                <input type="password" name="password" id="password"
+                    class="w-full bg-cyan-50 border-2 border-black rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:bg-white transition">
             </div>
 
             <div class="mb-6">
-                <label for="password_confirmation" class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">Confirmar contraseña</label>
-                <input type="password" name="password_confirmation" id="password_confirmation" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition">
+                <label for="password_confirmation"
+                    class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Confirmar
+                    contraseña</label>
+                <input type="password" name="password_confirmation" id="password_confirmation"
+                    class="w-full bg-cyan-50 border-2 border-black rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:bg-white transition">
             </div>
 
-            <button type="submit" :disabled="loading" x-text="loading ? 'Creando cuenta...' : 'Registrarme'" class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-indigo-500 transition shadow-[0_0_30px_-5px_rgba(99,102,241,0.6)] disabled:opacity-60">
-</button>
+            <button type="submit" :disabled="loading" x-text="loading ? 'Creando cuenta...' : 'Registrarme'"
+                class="w-full bg-fuchsia-500 text-white border-4 border-black px-4 py-3 rounded-full text-sm font-bold hover:bg-fuchsia-400 transition shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] disabled:opacity-60">
+            </button>
         </form>
 
-        <p class="text-center text-sm text-gray-500 mt-6">
-            ¿Ya tenés cuenta? <a href="/login" class="text-indigo-400 hover:text-indigo-300">Iniciá sesión</a>
+        <p class="text-center text-sm text-gray-600 mt-6 font-medium">
+            ¿Ya tenés cuenta? <a href="/login" class="text-fuchsia-600 font-bold hover:underline">Iniciá sesión</a>
         </p>
 
     </div>
 </body>
+
 </html>

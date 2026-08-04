@@ -32,20 +32,20 @@ class NoteController extends Controller
             default => $query->latest(),
         };
 
-       $notes = $query->paginate(5)->withQueryString();
+        $notes = $query->paginate(5)->withQueryString();
 
-$totalNotes = Note::where('user_id', auth()->id())->count();
-$topTags = Tag::whereHas('notes', function ($q) {
-    $q->where('user_id', auth()->id());
-})
-    ->withCount(['notes' => function ($q) {
-        $q->where('user_id', auth()->id());
-    }])
-    ->orderByDesc('notes_count')
-    ->take(3)
-    ->get();
+        $totalNotes = Note::where('user_id', auth()->id())->count();
+        $topTags = Tag::whereHas('notes', function ($q) {
+            $q->where('user_id', auth()->id());
+        })
+            ->withCount(['notes' => function ($q) {
+                $q->where('user_id', auth()->id());
+            }])
+            ->orderByDesc('notes_count')
+            ->take(3)
+            ->get();
 
-return view('notes.index', ['notes' => $notes, 'totalNotes' => $totalNotes, 'topTags' => $topTags]);
+        return view('notes.index', ['notes' => $notes, 'totalNotes' => $totalNotes, 'topTags' => $topTags]);
     }
 
     /**
@@ -134,6 +134,9 @@ return view('notes.index', ['notes' => $notes, 'totalNotes' => $totalNotes, 'top
             }
 
             $validated['image'] = $request->file('image')->store('notes', 'public');
+        } elseif ($request->input('remove_image') === '1' && $note->image) {
+            Storage::disk('public')->delete($note->image);
+            $validated['image'] = null;
         } else {
             unset($validated['image']);
         }
@@ -206,7 +209,18 @@ return view('notes.index', ['notes' => $notes, 'totalNotes' => $totalNotes, 'top
 
         $notes = $notesQuery->latest()->get();
 
-        return view('notes.index', ['notes' => $notes]);
+        $totalNotes = Note::where('user_id', auth()->id())->count();
+        $topTags = Tag::whereHas('notes', function ($q) {
+            $q->where('user_id', auth()->id());
+        })
+            ->withCount(['notes' => function ($q) {
+                $q->where('user_id', auth()->id());
+            }])
+            ->orderByDesc('notes_count')
+            ->take(3)
+            ->get();
+
+        return view('notes.index', ['notes' => $notes, 'totalNotes' => $totalNotes, 'topTags' => $topTags]);
     }
 
     public function history(string $id)
