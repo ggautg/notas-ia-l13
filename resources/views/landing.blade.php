@@ -1,38 +1,58 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <title>Notas</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💿</text></svg>">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Notas · Sanctum</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9760;</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Cormorant+SC:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Jost:wght@300;400;500;600;700&family=Lora:wght@400;500;600;700&family=Marcellus&family=Marcellus+SC&family=Pirata+One&family=Raleway:wght@300;400;500;600;700&family=UnifrakturCook:wght@700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gradient-to-br from-cyan-100 via-fuchsia-50 to-lime-100 text-gray-900 font-sans min-h-screen relative overflow-hidden">
 
-    <div class="absolute top-10 left-10 w-40 h-40 bg-gradient-to-br from-fuchsia-400 to-purple-500 rounded-full blur-2xl opacity-60"></div>
-    <div class="absolute bottom-10 right-10 w-56 h-56 bg-gradient-to-br from-cyan-300 to-blue-400 rounded-full blur-2xl opacity-60"></div>
-    <div class="absolute top-1/3 right-1/4 w-32 h-32 bg-gradient-to-br from-lime-300 to-yellow-300 rounded-full blur-2xl opacity-50"></div>
+<body class="relative min-h-screen overflow-hidden">
 
-    <div class="relative max-w-3xl mx-auto px-6 pt-28 pb-20 text-center">
+    <div class="pointer-events-none fixed -top-52 right-[-16%] h-[36rem] w-[36rem] rounded-full bg-[radial-gradient(circle,rgba(167,139,250,0.28)_0%,transparent_72%)] blur-3xl"></div>
+    <div class="pointer-events-none fixed -bottom-64 left-[-18%] h-[40rem] w-[40rem] rounded-full bg-[radial-gradient(circle,rgba(192,38,211,0.24)_0%,transparent_74%)] blur-3xl"></div>
+    <div class="pointer-events-none fixed top-1/2 left-1/2 h-[48rem] w-[48rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(124,58,237,0.18)_0%,transparent_78%)] blur-[150px]"></div>
 
+    <div class="relative mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center px-6 text-center">
+        <div class="gothic-divider mb-10 w-full max-w-xl">
+            <span>Sanctum Notarum</span>
+        </div>
 
-        <h1 class="text-6xl sm:text-7xl font-black tracking-tight mb-6" style="background: linear-gradient(90deg, #ff00cc, #00e5ff, #ccff00); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 3px 3px 0px rgba(0,0,0,0.1);">
+        <h1 class="text-glow-gothic text-6xl sm:text-7xl md:text-8xl tracking-[0.6em] text-[#c4b5fd] uppercase" style="font-family: var(--font-display);">
             NOTAS
         </h1>
 
-        <div class="flex justify-center gap-4 mb-20">
+        <p class="mt-8 max-w-2xl text-sm uppercase tracking-[0.6em] text-white/50">
+            Un archivo gótico para tus ideas · Minimal · Elegante · Inquietante
+        </p>
+
+        <div class="mt-14 flex flex-wrap justify-center gap-4">
             @auth
-                <a href="/notes" class="bg-fuchsia-500 text-white border-4 border-black px-8 py-3.5 rounded-full text-sm font-bold hover:bg-fuchsia-400 transition shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]">
-                    Ir a mis notas →
+                <a href="/notes" class="btn-gothic">
+                    <span>Ir a mis notas</span>
+                    <span>→</span>
                 </a>
             @else
-                <a href="/register" class="bg-fuchsia-500 text-white border-4 border-black px-8 py-3.5 rounded-full text-sm font-bold hover:bg-fuchsia-400 transition shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]">
-                    Empezar gratis →
+                <a href="/register" class="btn-gothic">
+                    <span>Empezar gratis</span>
+                    <span>→</span>
                 </a>
-                <a href="/login" class="bg-white border-4 border-black px-8 py-3.5 rounded-full text-sm font-bold hover:bg-cyan-100 transition shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]">
-                    Iniciar sesión
+                <a href="/login" class="btn-gothic-ghost">
+                    <span>Iniciar sesión</span>
                 </a>
             @endauth
         </div>
 
+        <div class="gothic-divider mt-16 w-full max-w-xl">
+            <span>Noctis · Ars · Memoria</span>
+        </div>
     </div>
 </body>
+
 </html>
