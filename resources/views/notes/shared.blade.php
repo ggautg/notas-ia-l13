@@ -1,47 +1,60 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <title>{{ $note->title }}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💿</text></svg>">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ $note->title }} · Nota compartida</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9760;</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Cormorant+SC:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Jost:wght@300;400;500;600;700&family=Lora:wght@400;500;600;700&family=Marcellus&family=Marcellus+SC&family=Pirata+One&family=Raleway:wght@300;400;500;600;700&family=UnifrakturCook:wght@700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gradient-to-br from-cyan-100 via-fuchsia-50 to-lime-100 text-gray-900 font-sans min-h-screen relative">
 
-    <div class="absolute top-10 right-10 w-48 h-48 bg-gradient-to-br from-fuchsia-400 to-purple-500 rounded-full blur-2xl opacity-40 pointer-events-none"></div>
+<body class="relative min-h-screen">
 
-    <div class="relative max-w-2xl mx-auto px-6 pt-14 pb-20">
+    <div class="pointer-events-none fixed -top-48 right-[-12%] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(167,139,250,0.26)_0%,transparent_72%)] blur-3xl"></div>
+    <div class="pointer-events-none fixed -bottom-56 left-[-14%] h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(circle,rgba(192,38,211,0.22)_0%,transparent_74%)] blur-3xl"></div>
 
-        <a href="/" class="text-2xl font-black tracking-tight mb-6 inline-block" style="background: linear-gradient(90deg, #ff00cc, #00e5ff, #ccff00); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
-            NOTAS
-        </a>
+    <div class="relative mx-auto max-w-2xl px-6 pt-16 pb-24">
+        <header class="mb-10 text-center">
+            <div class="gothic-divider mb-7">
+                <span>Sanctum Notarum</span>
+            </div>
+            <a href="/" class="text-glow-gothic text-4xl sm:text-5xl tracking-[0.6em] text-[#c4b5fd] uppercase" style="font-family: var(--font-display);">
+                NOTAS
+            </a>
+            <p class="mt-6 text-xs uppercase tracking-[0.6em] text-white/50">Nota compartida</p>
+        </header>
 
-        <p class="text-xs text-gray-500 mb-4 font-bold uppercase tracking-wide">Nota compartida</p>
-
-        <div class="bg-white border-4 border-black rounded-2xl p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-            <h1 class="text-2xl font-black mb-4">
+        <article class="gothic-panel note-gothic px-6 py-9 sm:px-10">
+            <div class="flex items-center gap-3">
                 @if ($note->emoji)
-                    {{ $note->emoji }}
+                    <span class="text-3xl">{{ $note->emoji }}</span>
                 @endif
-                {{ $note->title }}
-            </h1>
+                <h1 class="text-lg sm:text-xl tracking-[0.32em] text-[#c4b5fd]">{{ $note->title }}</h1>
+            </div>
 
             @if ($note->image)
-                <img src="{{ Storage::url($note->image) }}" alt="{{ $note->title }}" class="w-full max-w-xs rounded-xl mb-4 border-2 border-black">
+                <img src="{{ Storage::url($note->image) }}" alt="{{ $note->title }}" class="mt-6 w-full max-w-md rounded-2xl border border-[#a78bfa]/60 shadow-[0_40px_80px_-40px_rgba(167,139,250,0.5)]">
             @endif
 
-            <p class="text-gray-700">{{ $note->content }}</p>
+            <p class="mt-6 whitespace-pre-line text-base leading-relaxed text-white/90" style="font-family: var(--font-elegant); font-size: 1.08rem;">{{ $note->content }}</p>
 
             @if ($note->tags->isNotEmpty())
-                <div class="flex gap-2 mt-4 flex-wrap">
+                <div class="mt-8 flex flex-wrap gap-2">
                     @foreach ($note->tags as $tag)
-                        <span class="bg-cyan-100 border-2 border-black text-cyan-800 text-xs px-2.5 py-1 rounded-full font-medium">
-                            {{ $tag->name }}
-                        </span>
+                        <span class="tag-gothic">{{ $tag->name }}</span>
                     @endforeach
                 </div>
             @endif
-        </div>
 
+            <div class="ornament-gothic my-8"></div>
+            <p class="text-center text-xs uppercase tracking-[0.5em] text-white/40">Ex umbris · Ad memoriam</p>
+        </article>
     </div>
 </body>
+
 </html>
