@@ -2,211 +2,215 @@
 <html lang="es">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mis Notas</title>
     <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💿</text></svg>">
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#10022;</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Cormorant+SC:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Julius+Sans+One&family=Marcellus&family=Marcellus+SC&family=Poiret+One&family=Raleway:wght@300;400;500;600;700&family=Sorts+Mill+Goudy:ital@0;1&family=Unna:wght@400;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-gradient-to-br from-cyan-100 via-fuchsia-50 to-lime-100 text-gray-900 font-sans min-h-screen relative">
+<body class="relative min-h-screen">
 
-    <div
-        class="absolute top-10 right-10 w-48 h-48 bg-gradient-to-br from-fuchsia-400 to-purple-500 rounded-full blur-2xl opacity-40 pointer-events-none">
-    </div>
-    <div
-        class="absolute bottom-10 left-10 w-56 h-56 bg-gradient-to-br from-cyan-300 to-blue-400 rounded-full blur-2xl opacity-40 pointer-events-none">
-    </div>
+    <div class="pointer-events-none fixed -top-40 right-[-10%] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(245,217,140,0.22)_0%,transparent_70%)] blur-3xl"></div>
+    <div class="pointer-events-none fixed -bottom-48 left-[-12%] h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(circle,rgba(120,88,200,0.22)_0%,transparent_72%)] blur-3xl"></div>
+    <div class="pointer-events-none fixed top-1/2 left-1/2 h-[38rem] w-[38rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.12)_0%,transparent_75%)] blur-[130px]"></div>
 
-    <div class="relative max-w-2xl mx-auto px-6 pt-14 pb-20">
+    <div class="relative mx-auto max-w-3xl px-6 pt-16 pb-24">
 
-        <div class="flex justify-between items-center mb-8">
-            <a href="/" class="text-2xl font-black tracking-tight"
-                style="background: linear-gradient(90deg, #ff00cc, #00e5ff, #ccff00); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
-                NOTAS
-            </a>
-
-            <form action="/logout" method="POST">
+        <header class="mb-14 text-center">
+            <div class="deco-divider mb-7">
+                <span>Maison des Notes</span>
+            </div>
+            <div class="flex flex-col items-center gap-6">
+                <a href="/" class="text-glow text-center text-4xl sm:text-6xl md:text-7xl font-semibold tracking-[0.6em] text-[#f5d98c] uppercase" style="font-family: var(--font-display);">
+                    NOTAS
+                </a>
+                <div class="deco-pill">
+                    <span>Art Déco · Noir · Atelier</span>
+                </div>
+            </div>
+            <form action="/logout" method="POST" class="mt-9 flex justify-center">
                 @csrf
-                <button type="submit" class="text-xs text-gray-600 hover:text-fuchsia-600 font-bold transition">
-                    {{ auth()->user()->name }} · Cerrar sesión
+                <button type="submit" class="btn-ghost">
+                    <span>{{ auth()->user()->name }}</span>
+                    <span>·</span>
+                    <span>Cerrar sesión</span>
+                </button>
+            </form>
+        </header>
+
+        @if (session('success'))
+            <div class="glass-panel mb-9 px-6 py-4 text-center">
+                <p class="text-xs uppercase tracking-[0.5em] text-[#f5d98c]">{{ session('success') }}</p>
+            </div>
+        @endif
+
+        <div class="glass-panel art-deco-frame mb-10 px-6 py-9 sm:px-10">
+            <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.6em] text-[#f5d98c]/80">Colección</p>
+                    <p class="mt-3 text-lg text-white/80">{{ $totalNotes }} {{ Str::plural('nota', $totalNotes) }}</p>
+                    @if ($topTags->isNotEmpty())
+                        <p class="mt-4 text-xs uppercase tracking-[0.45em] text-white/40">
+                            Más usadas ·
+                            @foreach ($topTags as $tag)
+                                <span class="text-[#f5d98c]">{{ $tag->name }}</span>{{ !$loop->last ? ' · ' : '' }}
+                            @endforeach
+                        </p>
+                    @endif
+                </div>
+                <a href="/notes/create" class="btn-deco">
+                    <span>+</span>
+                    <span>Nueva nota</span>
+                </a>
+            </div>
+
+            <div class="ornament my-9"></div>
+
+            <form action="/notes/search" method="GET" class="flex flex-col gap-3 sm:flex-row">
+                <div class="relative flex-1">
+                    <input type="text" name="query" placeholder="BUSCAR POR TÍTULO O CONTENIDO"
+                        value="{{ request('query') }}"
+                        class="input-deco">
+                </div>
+
+                <select name="sort" x-data @change="$el.form.action = '/notes'; $el.form.submit()"
+                    class="input-deco sm:w-auto">
+                    <option value="recent" {{ request('sort', 'recent') === 'recent' ? 'selected' : '' }}>Más recientes</option>
+                    <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Más antiguas</option>
+                    <option value="az" {{ request('sort') === 'az' ? 'selected' : '' }}>Alfabético (A-Z)</option>
+                </select>
+
+                <button type="submit" class="btn-ghost">
+                    <span>Buscar</span>
                 </button>
             </form>
         </div>
 
-        @if (session('success'))
-            <div
-                class="bg-lime-100 border-4 border-black text-lime-800 px-4 py-3 rounded-2xl mb-4 text-sm font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <a href="/notes/create"
-            class="inline-block bg-fuchsia-500 text-white border-4 border-black px-4 py-2.5 rounded-full text-sm font-bold hover:bg-fuchsia-400 transition shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-4">
-            + Nueva nota
-        </a>
-
-        <div class="flex items-center gap-4 text-xs text-gray-600 font-medium mb-6">
-            <span>{{ $totalNotes }} {{ Str::plural('nota', $totalNotes) }}</span>
-
-            @if ($topTags->isNotEmpty())
-                <span>·</span>
-                <span>
-                    Más usadas:
-                    @foreach ($topTags as $tag)
-                        <span class="text-fuchsia-600 font-bold">{{ $tag->name }}</span>{{ !$loop->last ? ', ' : '' }}
-                    @endforeach
-                </span>
-            @endif
-        </div>
-
-        <form action="/notes/search" method="GET" class="flex gap-2 mb-6">
-            <input type="text" name="query" placeholder="Buscar por título o contenido..."
-                value="{{ request('query') }}"
-                class="flex-1 bg-white border-2 border-black rounded-full px-4 py-2.5 text-sm focus:outline-none focus:bg-cyan-50 transition">
-
-            <select name="sort" x-data @change="$el.form.action = '/notes'; $el.form.submit()"
-                class="bg-white border-2 border-black rounded-full px-3 py-2.5 text-xs text-gray-700 font-medium focus:outline-none">
-                <option value="recent" {{ request('sort', 'recent') === 'recent' ? 'selected' : '' }}>Más recientes
-                </option>
-                <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Más antiguas</option>
-                <option value="az" {{ request('sort') === 'az' ? 'selected' : '' }}>Alfabético (A-Z)</option>
-            </select>
-
-            <button type="submit"
-                class="bg-cyan-400 text-black border-2 border-black px-4 py-2.5 rounded-full text-sm font-bold hover:bg-cyan-300 transition">
-                Buscar
-            </button>
-        </form>
-
         @if (request('query') || request('tag'))
-            <div class="flex items-center gap-2 mb-6 text-xs text-gray-600 font-medium">
+            <div class="mb-8 flex flex-wrap items-center justify-center gap-3 text-xs uppercase tracking-[0.4em] text-white/50">
                 @if (request('query'))
-                    <span>Buscando: "{{ request('query') }}"</span>
+                    <span>Buscando · "{{ request('query') }}"</span>
                 @endif
                 @if (request('tag'))
-                    <span>Etiqueta: "{{ request('tag') }}"</span>
+                    <span>Etiqueta · "{{ request('tag') }}"</span>
                 @endif
-                <a href="/notes" class="text-fuchsia-600 font-bold hover:underline">✕ Ver todas</a>
+                <a href="/notes" class="text-[#f5d98c] hover:text-[#f7e3a6]">Ver todas</a>
             </div>
         @endif
 
         @if ($notes->isEmpty())
-            <div class="text-center py-16">
-                <p class="text-5xl mb-4">📭</p>
+            <div class="glass-panel text-center py-16 px-6">
+                <p class="text-5xl mb-6">&#10022;</p>
                 @if (request('query') || request('tag'))
-                    <p class="text-gray-600 text-sm font-medium">No encontramos ninguna nota con ese filtro.</p>
+                    <p class="text-sm uppercase tracking-[0.4em] text-white/60">No encontramos ninguna nota con ese filtro.</p>
                 @else
-                    <p class="text-gray-600 text-sm mb-4 font-medium">Todavía no tenés notas.</p>
-                    <a href="/notes/create" class="text-fuchsia-600 hover:underline text-sm font-bold">
-                        Creá la primera →
+                    <p class="text-sm uppercase tracking-[0.4em] text-white/60 mb-6">Aún no hay notas en esta colección.</p>
+                    <a href="/notes/create" class="btn-deco">
+                        <span>+</span>
+                        <span>Crear la primera</span>
                     </a>
                 @endif
             </div>
-        @endif
+        @else
+            <ul class="space-y-5">
+                @foreach ($notes as $note)
+                    <li class="glass-panel note-card p-6 sm:p-8 {{ $note->pinned ? 'is-pinned' : '' }}">
+                        <div class="flex justify-between items-start gap-4">
+                            <div class="flex items-center gap-3">
+                                @if ($note->emoji)
+                                    <span class="text-2xl">{{ $note->emoji }}</span>
+                                @endif
+                                <h2 class="text-lg sm:text-xl tracking-[0.28em] text-[#f5d98c]">{{ $note->title }}</h2>
+                            </div>
 
-        <ul class="space-y-4">
-            @foreach ($notes as $note)
-                <li
-                    class="bg-white border-4 border-black rounded-2xl p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] {{ $note->pinned ? 'ring-4 ring-fuchsia-300' : '' }}">
-
-                    <div class="flex justify-between items-center">
-                        <strong class="text-gray-900 flex items-center gap-1.5">
-                            @if ($note->emoji)
-                                <span>{{ $note->emoji }}</span>
-                            @endif
-                            <span>{{ $note->title }}</span>
-                        </strong>
-
-                        <form action="/notes/{{ $note->id }}/pin" method="POST">
-                            @csrf
-                            <button type="submit"
-                                class="text-sm shrink-0 transition {{ $note->pinned ? 'opacity-100' : 'opacity-30 hover:opacity-60' }}">
-                                📌
-                            </button>
-                        </form>
-                    </div>
-
-                    @if ($note->image)
-                        <img src="{{ Storage::url($note->image) }}" alt="{{ $note->title }}"
-                            class="w-full max-w-xs rounded-xl mt-3 border-2 border-black">
-                    @endif
-
-                    <p class="text-gray-600 text-sm mt-2">{{ Str::limit($note->content, 150) }}</p>
-
-                    @if ($note->tags->isNotEmpty())
-                        <div class="flex gap-2 mt-3 flex-wrap">
-                            @foreach ($note->tags as $tag)
-                                <a href="{{ request('query') ? '/notes/search?query=' . request('query') . '&tag=' . $tag->name : '/notes?tag=' . $tag->name }}"
-                                    class="bg-cyan-100 border-2 border-black text-cyan-800 text-xs px-2.5 py-1 rounded-full hover:bg-cyan-200 transition font-medium">
-                                    {{ $tag->name }}
-                                </a>
-                            @endforeach
+                            <form action="/notes/{{ $note->id }}/pin" method="POST">
+                                @csrf
+                                <button type="submit" class="text-lg transition {{ $note->pinned ? 'opacity-100' : 'opacity-40 hover:opacity-80' }}">
+                                    &#128204;
+                                </button>
+                            </form>
                         </div>
-                    @endif
 
-                    <div class="flex gap-4 mt-4 text-xs font-bold">
-                        <a href="/notes/{{ $note->id }}/edit"
-                            class="text-gray-600 hover:text-fuchsia-600 transition">Editar</a>
+                        @if ($note->image)
+                            <img src="{{ Storage::url($note->image) }}" alt="{{ $note->title }}"
+                                class="mt-5 w-full max-w-md rounded-2xl border border-[#d9b75b]/60 shadow-[0_30px_60px_-30px_rgba(245,217,140,0.4)]">
+                        @endif
 
-                        <div x-data="{ confirming: false }">
-                            <button @click="confirming = true"
-                                class="text-red-500 hover:text-red-600 transition">Borrar</button>
+                        <p class="mt-5 text-base leading-relaxed text-white/80" style="font-family: var(--font-elegant); font-size: 1.05rem;">{{ Str::limit($note->content, 180) }}</p>
 
-                            <div x-show="confirming" x-cloak
-                                class="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
-                                @click.self="confirming = false">
-                                <div
-                                    class="bg-white border-4 border-black rounded-2xl p-6 max-w-sm mx-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                                    <h3 class="font-black text-gray-900 mb-2">¿Borrar esta nota?</h3>
-                                    <p class="text-gray-600 text-sm mb-6 font-medium">Esta acción no se puede deshacer.</p>
+                        @if ($note->tags->isNotEmpty())
+                            <div class="mt-6 flex flex-wrap gap-2">
+                                @foreach ($note->tags as $tag)
+                                    <a href="{{ request('query') ? '/notes/search?query=' . request('query') . '&tag=' . $tag->name : '/notes?tag=' . $tag->name }}"
+                                        class="tag-pill">
+                                        {{ $tag->name }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
 
-                                    <div class="flex gap-3 justify-end">
-                                        <button @click="confirming = false"
-                                            class="text-sm text-gray-600 hover:text-gray-900 transition px-4 py-2 font-bold">
-                                            Cancelar
-                                        </button>
+                        <div class="ornament my-7"></div>
 
-                                        <form action="/notes/{{ $note->id }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="bg-red-500 text-white border-2 border-black text-sm px-4 py-2 rounded-full hover:bg-red-400 transition font-bold">
-                                                Sí, borrar
+                        <div class="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.35em] text-white/60">
+                            <a href="/notes/{{ $note->id }}/edit" class="hover:text-[#f5d98c]">Editar</a>
+
+                            <div x-data="{ confirming: false }">
+                                <button @click="confirming = true" class="hover:text-red-400">Borrar</button>
+
+                                <div x-show="confirming" x-cloak
+                                    class="modal-backdrop fixed inset-0 flex items-center justify-center z-50 px-4"
+                                    @click.self="confirming = false">
+                                    <div class="glass-panel max-w-sm w-full p-7 text-center">
+                                        <p class="text-xs uppercase tracking-[0.6em] text-[#f5d98c]">Confirmar</p>
+                                        <h3 class="mt-4 text-lg tracking-[0.4em]">¿Borrar esta nota?</h3>
+                                        <p class="mt-3 text-sm text-white/60">Esta acción no se puede deshacer.</p>
+
+                                        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                                            <button @click="confirming = false" class="btn-ghost">
+                                                <span>Cancelar</span>
                                             </button>
-                                        </form>
+                                            <form action="/notes/{{ $note->id }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn-deco">
+                                                    <span>Sí, borrar</span>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <form action="/notes/{{ $note->id }}/share" method="POST">
+                                @csrf
+                                <button type="submit" class="hover:text-[#f5d98c]">Compartir</button>
+                            </form>
+
+                            <a href="/notes/{{ $note->id }}/pdf" class="hover:text-[#f5d98c]">PDF</a>
+                            <a href="/notes/{{ $note->id }}/history" class="hover:text-[#f5d98c]">Historial</a>
                         </div>
 
-                        <form action="/notes/{{ $note->id }}/share" method="POST">
-                            @csrf
-                            <button type="submit" class="text-gray-600 hover:text-fuchsia-600 transition">🔗
-                                Compartir</button>
-                        </form>
-
-                        <a href="/notes/{{ $note->id }}/pdf" class="text-gray-600 hover:text-fuchsia-600 transition">📄
-                            PDF</a>
-                        <a href="/notes/{{ $note->id }}/history" class="text-gray-600 hover:text-fuchsia-600 transition">🕒
-                            Historial</a>
-                    </div>
-
-                    @if ($note->share_token)
-                        <div x-data="{ copied: false }" class="flex items-center gap-2 mt-2">
-                            <p class="text-xs text-gray-500">{{ url('/shared/' . $note->share_token) }}</p>
-                            <button type="button"
-                                @click="navigator.clipboard.writeText('{{ url('/shared/' . $note->share_token) }}'); copied = true; setTimeout(() => copied = false, 2000)"
-                                class="text-xs text-fuchsia-600 font-bold hover:underline"
-                                x-text="copied ? '✓ Copiado' : 'Copiar'"></button>
-                        </div>
-                    @endif
-
-                </li>
-            @endforeach
-        </ul>
+                        @if ($note->share_token)
+                            <div x-data="{ copied: false }" class="mt-4 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.3em] text-white/40">
+                                <p class="break-all">{{ url('/shared/' . $note->share_token) }}</p>
+                                <button type="button"
+                                    @click="navigator.clipboard.writeText('{{ url('/shared/' . $note->share_token) }}'); copied = true; setTimeout(() => copied = false, 2000)"
+                                    class="text-[#f5d98c] hover:text-[#f7e3a6]"
+                                    x-text="copied ? 'Copiado' : 'Copiar'"></button>
+                            </div>
+                        @endif
+                    </li>
+                @endforeach
+            </ul>
+        @endif
 
         @if ($notes instanceof \Illuminate\Pagination\LengthAwarePaginator)
-            <div class="mt-6">
+            <div class="mt-10 flex justify-center">
                 {{ $notes->links() }}
             </div>
         @endif
