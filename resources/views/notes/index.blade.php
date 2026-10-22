@@ -6,36 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mis Notas</title>
     <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#10022;</text></svg>">
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9760;</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Cormorant+SC:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Julius+Sans+One&family=Marcellus&family=Marcellus+SC&family=Poiret+One&family=Raleway:wght@300;400;500;600;700&family=Sorts+Mill+Goudy:ital@0;1&family=Unna:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Cormorant+SC:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Jost:wght@300;400;500;600;700&family=Lora:wght@400;500;600;700&family=Marcellus&family=Marcellus+SC&family=Pirata+One&family=Raleway:wght@300;400;500;600;700&family=UnifrakturCook:wght@700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="relative min-h-screen">
 
-    <div class="pointer-events-none fixed -top-40 right-[-10%] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(245,217,140,0.22)_0%,transparent_70%)] blur-3xl"></div>
-    <div class="pointer-events-none fixed -bottom-48 left-[-12%] h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(circle,rgba(120,88,200,0.22)_0%,transparent_72%)] blur-3xl"></div>
-    <div class="pointer-events-none fixed top-1/2 left-1/2 h-[38rem] w-[38rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.12)_0%,transparent_75%)] blur-[130px]"></div>
+    <div class="pointer-events-none fixed -top-48 right-[-12%] h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle,rgba(167,139,250,0.26)_0%,transparent_72%)] blur-3xl"></div>
+    <div class="pointer-events-none fixed -bottom-56 left-[-14%] h-[34rem] w-[34rem] rounded-full bg-[radial-gradient(circle,rgba(192,38,211,0.22)_0%,transparent_74%)] blur-3xl"></div>
+    <div class="pointer-events-none fixed top-1/2 left-1/2 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(124,58,237,0.16)_0%,transparent_78%)] blur-[140px]"></div>
 
     <div class="relative mx-auto max-w-3xl px-6 pt-16 pb-24">
 
-        <header class="mb-14 text-center">
-            <div class="deco-divider mb-7">
-                <span>Maison des Notes</span>
+        <header class="mb-16 text-center">
+            <div class="gothic-divider mb-8">
+                <span>Sanctum Notarum</span>
             </div>
-            <div class="flex flex-col items-center gap-6">
-                <a href="/" class="text-glow text-center text-4xl sm:text-6xl md:text-7xl font-semibold tracking-[0.6em] text-[#f5d98c] uppercase" style="font-family: var(--font-display);">
+            <div class="flex flex-col items-center gap-7">
+                <a href="/" class="text-glow-gothic text-center text-4xl sm:text-6xl md:text-7xl tracking-[0.6em] text-[#c4b5fd] uppercase" style="font-family: var(--font-display);">
                     NOTAS
                 </a>
-                <div class="deco-pill">
-                    <span>Art Déco · Noir · Atelier</span>
+                <div class="gothic-pill">
+                    <span>Gothic · SaaS · Nocturne</span>
                 </div>
             </div>
-            <form action="/logout" method="POST" class="mt-9 flex justify-center">
+            <form action="/logout" method="POST" class="mt-10 flex justify-center">
                 @csrf
-                <button type="submit" class="btn-ghost">
+                <button type="submit" class="btn-gothic-ghost">
                     <span>{{ auth()->user()->name }}</span>
                     <span>·</span>
                     <span>Cerrar sesión</span>
