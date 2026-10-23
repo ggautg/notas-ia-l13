@@ -1,52 +1,78 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <title>Historial de {{ $note->title }}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💿</text></svg>">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Historial · {{ $note->title }}</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9760;</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Cormorant+SC:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Jost:wght@300;400;500;600;700&family=Lora:wght@400;500;600;700&family=Marcellus&family=Marcellus+SC&family=Pirata+One&family=Raleway:wght@300;400;500;600;700&family=UnifrakturCook:wght@700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gradient-to-br from-cyan-100 via-fuchsia-50 to-lime-100 text-gray-900 font-sans min-h-screen relative">
 
-    <div class="absolute top-10 right-10 w-48 h-48 bg-gradient-to-br from-fuchsia-400 to-purple-500 rounded-full blur-2xl opacity-40 pointer-events-none"></div>
+<body class="relative min-h-screen">
 
-    <div class="relative max-w-2xl mx-auto px-6 pt-14 pb-20">
+    <div class="pointer-events-none fixed -top-48 right-[-12%] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(167,139,250,0.26)_0%,transparent_72%)] blur-3xl"></div>
+    <div class="pointer-events-none fixed -bottom-56 left-[-14%] h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(circle,rgba(192,38,211,0.22)_0%,transparent_74%)] blur-3xl"></div>
 
-        <a href="/" class="text-2xl font-black tracking-tight mb-8 inline-block" style="background: linear-gradient(90deg, #ff00cc, #00e5ff, #ccff00); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
-            NOTAS
-        </a>
+    <div class="relative mx-auto max-w-2xl px-6 pt-16 pb-24">
+        <header class="mb-12 text-center">
+            <div class="gothic-divider mb-7">
+                <span>Sanctum Notarum</span>
+            </div>
+            <a href="/notes" class="text-glow-gothic text-4xl sm:text-5xl tracking-[0.6em] text-[#c4b5fd] uppercase" style="font-family: var(--font-display);">
+                NOTAS
+            </a>
+            <p class="mt-6 text-xs uppercase tracking-[0.6em] text-white/50">Archivo de versiones</p>
+            <div class="mt-8 flex justify-center">
+                <a href="/notes" class="btn-gothic-ghost">
+                    <span>← Volver al archivo</span>
+                </a>
+            </div>
+        </header>
 
-        <h1 class="text-2xl font-black mb-1">Historial de versiones</h1>
-        <p class="text-gray-600 text-sm mb-6 font-medium">{{ $note->title }}</p>
+        <div class="mb-10 text-center">
+            <p class="text-xs uppercase tracking-[0.6em] text-[#c4b5fd]/80">Historial</p>
+            <h1 class="mt-4 text-lg tracking-[0.4em]">{{ $note->title }}</h1>
+            <div class="ornament-gothic my-7"></div>
+        </div>
 
         @if ($note->versions->isEmpty())
-            <p class="text-gray-600 text-sm font-medium">Esta nota todavía no tiene versiones anteriores guardadas.</p>
+            <div class="gothic-panel text-center py-12 px-6">
+                <p class="text-sm uppercase tracking-[0.4em] text-white/60">Sin versiones anteriores registradas</p>
+            </div>
         @else
-            <ul class="space-y-4">
+            <ul class="space-y-5">
                 @foreach ($note->versions as $version)
-                    <li class="bg-white border-4 border-black rounded-2xl p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <p class="text-xs text-gray-500 mb-2 font-medium">{{ $version->created_at->format('d/m/Y H:i') }}</p>
-                        <strong class="text-gray-900">{{ $version->title }}</strong>
-                        <p class="text-gray-600 text-sm mt-1">{{ $version->content }}</p>
+                    <li class="gothic-panel note-gothic p-6 sm:p-7">
+                        <p class="text-xs uppercase tracking-[0.4em] text-white/40">{{ $version->created_at->format('d/m/Y H:i') }}</p>
+                        <h2 class="mt-3 text-base tracking-[0.3em] text-[#c4b5fd]">{{ $version->title }}</h2>
+                        <p class="mt-4 whitespace-pre-line text-base leading-relaxed text-white/80" style="font-family: var(--font-elegant); font-size: 1.02rem;">{{ $version->content }}</p>
 
-                        <div x-data="{ confirming: false }" class="mt-3">
-                            <button @click="confirming = true" class="text-fuchsia-600 hover:text-fuchsia-500 text-sm font-bold transition">
+                        <div class="ornament-gothic my-6"></div>
+
+                        <div x-data="{ confirming: false }">
+                            <button @click="confirming = true" class="text-xs uppercase tracking-[0.4em] text-[#c4b5fd] hover:text-[#d7ccff]">
                                 ↩ Restaurar esta versión
                             </button>
 
-                            <div x-show="confirming" x-cloak class="fixed inset-0 bg-black/60 flex items-center justify-center z-50" @click.self="confirming = false">
-                                <div class="bg-white border-4 border-black rounded-2xl p-6 max-w-sm mx-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                                    <h3 class="font-black text-gray-900 mb-2">¿Restaurar esta versión?</h3>
-                                    <p class="text-gray-600 text-sm mb-6 font-medium">El contenido actual va a ser reemplazado (aunque igual queda guardado en el historial).</p>
+                            <div x-show="confirming" x-cloak class="modal-gothic fixed inset-0 flex items-center justify-center z-50 px-4" @click.self="confirming = false">
+                                <div class="gothic-panel max-w-sm w-full p-7 text-center">
+                                    <p class="text-xs uppercase tracking-[0.6em] text-[#c4b5fd]">Confirmar restauración</p>
+                                    <h3 class="mt-4 text-lg tracking-[0.4em]">¿Restaurar esta versión?</h3>
+                                    <p class="mt-3 text-sm text-white/60">El contenido actual será reemplazado, pero quedará guardado en el historial.</p>
 
-                                    <div class="flex gap-3 justify-end">
-                                        <button @click="confirming = false" class="text-sm text-gray-600 hover:text-gray-900 transition px-4 py-2 font-bold">
-                                            Cancelar
+                                    <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                                        <button @click="confirming = false" class="btn-gothic-ghost">
+                                            <span>Cancelar</span>
                                         </button>
-
                                         <form action="/notes/{{ $note->id }}/restore/{{ $version->id }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="bg-fuchsia-500 text-white border-2 border-black text-sm px-4 py-2 rounded-full hover:bg-fuchsia-400 transition font-bold">
-                                                Sí, restaurar
+                                            <button type="submit" class="btn-gothic">
+                                                <span>Sí, restaurar</span>
                                             </button>
                                         </form>
                                     </div>
@@ -57,9 +83,7 @@
                 @endforeach
             </ul>
         @endif
-
-        <a href="/notes" class="inline-block mt-6 text-sm text-gray-600 hover:text-fuchsia-600 font-bold transition">← Volver a la lista</a>
-
     </div>
 </body>
+
 </html>
